@@ -34,8 +34,11 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" href="{{ route("posts-show", ["id" => $Post->id]) }}">Show</a>
-                                        @if($Post->user_id == auth()->user()->id)
-                                            <a class="dropdown-item posts-edit-button" data-content="{{ $Post->content }}" data-id="{{ $Post->id }}">Edit</a>
+                                        @if($Post->user_id == auth()->user()->id || auth()->user()->can("Delete Post Everyone"))
+                                            @if($Post->user_id == auth()->user()->id )
+                                                <a class="dropdown-item posts-edit-button" data-content="{{ $Post->content }}" data-id="{{ $Post->id }}">Edit</a>
+                                            @endif
+                                            @can("Delete Post Everyone")
                                             <a class="dropdown-item">
                                                 <form class="w-100 p-0" action="{{ route("posts-delete", ["id" => $Post->id]) }}" method="POST">
                                                     @csrf
@@ -43,6 +46,7 @@
                                                     <input class="w-100 toText text-left" type="submit" value="Delete">
                                                 </form>
                                             </a>
+                                            @endcan
                                         @endif
                                     </div>
                                 </div>

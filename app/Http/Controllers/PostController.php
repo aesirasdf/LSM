@@ -75,7 +75,7 @@ class PostController extends Controller
         $post = Post::find($id);
         if(is_null($post))
             abort(404);
-        else if($post->user_id == auth()->user()->id ){
+        else if($post->user_id == auth()->user()->id || auth()->user()->can("Delete Post Everyone")){
             $post->delete();
         }
         else{
