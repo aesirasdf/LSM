@@ -19,14 +19,15 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ro
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::prefix('posts')->group(function () {
+Route::middleware(["auth"])->prefix('posts')->group(function () {
     Route::get('/', [App\Http\Controllers\PostController::class, 'index'])->name('posts');
     Route::get('/{id}', [App\Http\Controllers\PostController::class, 'show'])->name('posts-show');
     Route::post('/', [App\Http\Controllers\PostController::class, 'store'])->name('posts-store');
     Route::delete('/{id}', [App\Http\Controllers\PostController::class, 'delete'])->name('posts-delete');
     Route::patch('/{id}', [App\Http\Controllers\PostController::class, 'update'])->name('posts-update');
+    Route::post('{post}/like', [App\Http\Controllers\PostController::class, "like"])->name('posts-like');
 });
-Route::prefix('user')->group(function () {
+Route::prefix('users')->group(function () {
     Route::get('changepass', [App\Http\Controllers\Auth\UserController::class, "changepassview"])->name("user-changepassview");
     Route::patch('changepass', [App\Http\Controllers\Auth\UserController::class, "changepass"])->name("user-changepass");
 });

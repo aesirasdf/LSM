@@ -15,7 +15,7 @@ class UserController extends Controller
             $users = User::all();
         else
             $users = collect([auth()->user()]);
-        return view("user.changepass", compact("users"));
+        return view("users.changepass", compact("users"));
     }
 
     //PATCH: /user/changepass

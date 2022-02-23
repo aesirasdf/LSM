@@ -12,9 +12,10 @@ class PostController extends Controller
     //
 
     public function __construct(){
-        $this->middleware("auth");
+        // $this->middleware("auth");
     }
 
+    // WEB GET: /posts
     public function index(){
         //page, limit, sort_by, sort_type, search
         //Cache::remember($key, $time, function())
@@ -59,6 +60,8 @@ class PostController extends Controller
         return view("posts.index", compact("Posts", "pagination"));
     }
 
+
+    // WEB POST: /posts
     public function store(Request $request){
         $data = $this->validate($request, [
             "content" => "required",
@@ -71,6 +74,7 @@ class PostController extends Controller
         ]);
     }
 
+    // WEB DELETE: /posts/{id}
     public function delete($id){
         $post = Post::find($id);
         if(is_null($post))
@@ -88,6 +92,7 @@ class PostController extends Controller
         ]);
     }
 
+    // WEB PATCH: /posts/{id}
     public function update(Request $request, $id){
         $post = Post::find($id);
         if(is_null($post))
@@ -108,11 +113,27 @@ class PostController extends Controller
         ]);
     }
 
+    // WEB GET: /posts/{id}
     public function show($id){
-        $Post = Post::find($id);
+        $Post = Cache::remember("post-$id", now()->addSeconds(30) ,function() use ($id){
+            $post = Post::find($id);
+            return $post;
+        });
+
+        
         if(is_null($Post))
             abort(404);
+        // //cache like counts
+        // Cache::remember("post-$id-likes", now()->addSeconds(30), function()use($Post){
+        //     $Post->Likes;
+        // });
         return view("posts.show", compact("Post"));
+    }
+
+    // WEB POST: /posts/{post}/like
+    public function like(Post $Post){
+        $Post->Likes()->toggle([auth()->user()->id]);
+        return response(["count" => $Post->Likes->count()]);
     }
 
 }
