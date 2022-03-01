@@ -55,22 +55,14 @@
             if(!likeLoading){
                 likeLoading = true;
                 $(likebtn).addClass("disabled");
-                let liked = $(likebtn).data("liked");
                 $.ajax({
                     'url': "{{ route('posts-like', ['post' => '__post__']) }}".replace("__post__", {{ $Post->id }}),
                     'method': "POST",
                     success: function(data){
                         let likecount = $(likebtn).parent().parent().find(".likecount");
-                        liked = !liked;
-                        $(likebtn).data("liked", liked);
-                        if(liked){
-                            $(likebtn).find("i").removeClass("far");
-                            $(likebtn).find("i").addClass("fas");
-                        }
-                        else{
-                            $(likebtn).find("i").removeClass("fas");
-                            $(likebtn).find("i").addClass("far");
-                        }
+                        $(likebtn).find("i").toggleClass("fas");
+                        $(likebtn).find("i").toggleClass("far");
+
                         likecount.text(data.count);
                         likeLoading = false
 
