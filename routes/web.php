@@ -25,7 +25,8 @@ Route::middleware(["auth"])->prefix('posts')->group(function () {
     Route::post('/', [App\Http\Controllers\PostController::class, 'store'])->name('posts-store');
     Route::delete('/{id}', [App\Http\Controllers\PostController::class, 'delete'])->name('posts-delete');
     Route::patch('/{id}', [App\Http\Controllers\PostController::class, 'update'])->name('posts-update');
-    Route::post('{post}/like', [App\Http\Controllers\PostController::class, "like"])->name('posts-like');
+    Route::post('{Post}/like', [App\Http\Controllers\PostController::class, "like"])->name('posts-like');
+    Route::post('{Post}/comment', [App\Http\Controllers\PostController::class, "comment"])->name('posts-comment');
 });
 Route::prefix('users')->group(function () {
     Route::get('changepass', [App\Http\Controllers\Auth\UserController::class, "changepassview"])->name("user-changepassview");

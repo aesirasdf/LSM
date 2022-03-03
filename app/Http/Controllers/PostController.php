@@ -43,7 +43,7 @@ class PostController extends Controller
         $page = floor($page);
         $skip = ($page - 1) * $limit;
         $Posts = Cache::remember("posts-index-$search-$sort_by-$sort_type", now()->addSeconds(30), function () use($search, $sort_by, $sort_type) {
-            return Post::where("content", "LIKE", "%$search%")->orderBy($sort_by, $sort_type)->get();
+            return Post::where("content", "LIKE", "%$search%")->whereRaw("post_id IS NULL")->orderBy($sort_by, $sort_type)->get();
         });
         $pages = ceil($Posts->count() / $limit);
         $Posts = $Posts->skip($skip)->take($limit);
@@ -64,7 +64,7 @@ class PostController extends Controller
     // WEB POST: /posts
     public function store(Request $request){
         $data = $this->validate($request, [
-            "content" => "required",
+            "content" => "required|max:1000",
         ]);
         auth()->user()->Posts()->create($data);
         Cache::flush();
@@ -130,10 +130,28 @@ class PostController extends Controller
         return view("posts.show", compact("Post"));
     }
 
-    // WEB POST: /posts/{post}/like
+    // WEB API POST: /posts/{post}/like
     public function like(Post $Post){
         $Post->Likes()->toggle([auth()->user()->id]);
         return response(["count" => $Post->Likes->count()]);
     }
+
+    //WEB API POST: /posts/{post}/comment
+    public function comment(Request $request, Post $Post){
+        $data = $this->validate($request,[
+            "content" => "required|max:1000"
+        ]);
+        $post = $Post->Comments()->create([
+            "content" => $data['content'],
+            "user_id" => auth()->user()->id
+        ]);
+        $post->User;
+        return response([
+            "post" => $post
+        ]);
+    }
+
+
+    
 
 }

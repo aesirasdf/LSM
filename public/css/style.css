@@ -3,3 +3,20 @@
     border: 0;
     padding: 0;
 }
+.comment-bubble{
+    background-color: rgba(190,230,223,.3);
+    border-radius: 15px;
+    padding: 10px;
+}
+
+
+.font-14{
+    font-size:14px;
+}
+.font-16{
+    font-size:16px;
+}
+
+.text-bold{
+    font-weight: bold;
+}

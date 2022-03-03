@@ -9,8 +9,10 @@ class Post extends Model
 {
     use HasFactory;
     protected $fillable = [
-        "content"
+        "content",
+        "user_id"
     ];
+    public $createdAtFormat;
 
     public function User(){
         return $this->belongsTo(User::class, "user_id", "id");
@@ -44,6 +46,34 @@ class Post extends Model
         }
         else if($date['i'] != 0){
             $unit = $date["i"] == 1 ? " minute ago" : " minutes ago";
+            $response = $date['i'] . $unit;
+        }
+        else if($date['s'] != 0){
+            $response = "Just now";
+        }
+        return $response;
+    }
+    
+    public function createdAtFormat2(){
+        $date = (array)date_diff(date_Create($this->created_at), now());
+        if($date["y"] != 0){
+            $unit = "y";
+            $response = $date["y"] . $unit;
+        }
+        else if($date["m"] != 0){
+            $unit = "mon";
+            $response = $date["m"] . $unit;
+        }
+        else if($date["d"] |= 0){
+            $unit = "d";
+            $response = $date["d"] . $unit;
+        }
+        else if($date["h"] != 0){
+            $unit = "h";
+            $response = $date["h"] . $unit;
+        }
+        else if($date['i'] != 0){
+            $unit = "m";
             $response = $date['i'] . $unit;
         }
         else if($date['s'] != 0){
