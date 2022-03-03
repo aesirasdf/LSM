@@ -27,7 +27,7 @@ class Post extends Model
     }
 
     public function createdAtFormat(){
-        $date = (array)date_diff(date_Create($this->created_at), now());
+        $date = (array)date_diff(date_create($this->created_at), now());
         if($date["y"] != 0){
             $unit = $date["y"] == 1 ? " year ago" : " years ago";
             $response = $date["y"] . $unit;

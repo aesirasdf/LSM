@@ -99,7 +99,6 @@
         const likeClicked = (likebtn) => {
             if(!likeLoading){
                 likeLoading = true;
-                $(likebtn).addClass("disabled");
                 $.ajax({
                     'url': "{{ route('posts-like', ['Post' => '__post__']) }}".replace("__post__", {{ $Post->id }}),
                     'method': "POST",

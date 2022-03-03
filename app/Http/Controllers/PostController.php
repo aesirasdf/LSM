@@ -117,6 +117,7 @@ class PostController extends Controller
     public function show($id){
         $Post = Cache::remember("post-$id", now()->addSeconds(30) ,function() use ($id){
             $post = Post::find($id);
+            $post->Comments;
             return $post;
         });
 
@@ -146,12 +147,9 @@ class PostController extends Controller
             "user_id" => auth()->user()->id
         ]);
         $post->User;
+        Cache::forget("post-" . $Post->id);
         return response([
             "post" => $post
         ]);
     }
-
-
-    
-
 }
